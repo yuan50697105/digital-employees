@@ -6,6 +6,7 @@ import Workbench from './pages/Workbench.jsx';
 import Chat from './pages/Chat.jsx';
 import Schedules from './pages/Schedules.jsx';
 import Settings from './pages/Settings.jsx';
+import Help from './pages/Help.jsx';
 import { api } from './api.js';
 
 const NAV = [
@@ -16,6 +17,7 @@ const NAV = [
   { id: 'chat', label: '在线沟通', ico: '💬' },
   { id: 'schedules', label: '定时调度', ico: '⏰' },
   { id: 'settings', label: '系统设置', ico: '⚙️' },
+  { id: 'help', label: '帮助中心', ico: '❓' },
 ];
 
 export const ToastCtx = React.createContext(() => {});
@@ -65,6 +67,7 @@ export default function App() {
           {page === 'chat' && <Chat />}
           {page === 'schedules' && <Schedules />}
           {page === 'settings' && <Settings />}
+          {page === 'help' && <Help />}
         </main>
       </div>
       <div className="toast-wrap">
