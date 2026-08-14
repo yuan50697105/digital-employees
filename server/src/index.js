@@ -7,6 +7,7 @@ const fs = require('node:fs');
 const express = require('express');
 const cors = require('cors');
 const { all, log } = require('./db');
+const { seed } = require('./seed'); // 首次启动自动初始化（幂等）
 const { start: startScheduler } = require('./engine/scheduler');
 
 const app = express();
@@ -40,6 +41,8 @@ if (fs.existsSync(dist)) {
   app.use(express.static(dist));
   app.get(/^(?!\/api).*/, (req, res) => res.sendFile(path.join(dist, 'index.html')));
 }
+
+seed(); // 幂等：空库时预置 4 名数字员工 + 素材样例 + 示例任务 + 定时调度
 
 const PORT = process.env.PORT || 8787;
 app.listen(PORT, () => {

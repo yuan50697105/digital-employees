@@ -117,4 +117,7 @@ function seed() {
   console.log('✅ 种子初始化完成');
 }
 
-seed();
+// 直接运行（node src/seed.js）时手动执行；被服务导入时由 index.js 启动时调用（幂等）
+if (require.main === module) seed();
+
+module.exports = { seed, ensureAssets };

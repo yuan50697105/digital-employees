@@ -13,15 +13,6 @@ const db = new DatabaseSync(path.join(DATA_DIR, 'digital-employees.db'));
 db.exec('PRAGMA journal_mode = WAL;');
 db.exec('PRAGMA foreign_keys = ON;');
 
-// 兼容旧库：tasks 增加 nodes 列（任务节点编排 JSON）
-const taskCols = db.prepare("PRAGMA table_info(tasks)").all();
-if (!taskCols.some((c) => c.name === 'nodes')) {
-  db.exec('ALTER TABLE tasks ADD COLUMN nodes TEXT DEFAULT \'[]\'');
-}
-if (!taskCols.some((c) => c.name === 'node_results')) {
-  db.exec('ALTER TABLE tasks ADD COLUMN node_results TEXT DEFAULT \'[]\'');
-}
-
 db.exec(`
 CREATE TABLE IF NOT EXISTS employees (
   id            INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -102,6 +93,15 @@ CREATE TABLE IF NOT EXISTS settings (
   value TEXT
 );
 `);
+
+// 兼容旧库迁移（必须在建表之后执行）
+const taskCols = db.prepare("PRAGMA table_info(tasks)").all();
+if (!taskCols.some((c) => c.name === 'nodes')) {
+  db.exec('ALTER TABLE tasks ADD COLUMN nodes TEXT DEFAULT \'[]\'');
+}
+if (!taskCols.some((c) => c.name === 'node_results')) {
+  db.exec('ALTER TABLE tasks ADD COLUMN node_results TEXT DEFAULT \'[]\'');
+}
 
 /** 通用查询辅助 */
 function all(sql, params = []) {

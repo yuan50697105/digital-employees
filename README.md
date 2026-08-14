@@ -68,7 +68,7 @@
 # 1. 安装依赖
 npm install
 
-# 2. 启动服务（首次自动初始化种子：4 名数字员工 + 示例任务 + 定时调度）
+# 2. 启动服务（首次启动自动初始化种子：4 名数字员工 + 素材样例 + 示例任务 + 定时调度）
 npm start
 
 # 打开控制台
@@ -81,6 +81,34 @@ npm start
 npm run dev:server   # 后端 :8787
 npm run dev:web      # 前端 :5173（代理 /api）
 ```
+
+## 🐳 Docker 部署（一键）
+
+```bash
+docker build -t digital-employees .
+docker run -d -p 8787:8787 \
+  -v digital-employees-data:/app/server/data \
+  -e LLM_API_KEY=sk-xxx \
+  -e LLM_BASE_URL=https://api.deepseek.com \
+  -e LLM_MODEL=deepseek-chat \
+  --name digital-employees \
+  digital-employees
+
+# 控制台：http://localhost:8787
+```
+
+- 数据卷 `digital-employees-data` 持久化数据库、素材、成果文件（备份该卷即备份全部成果）
+- 也可用 `-e LLM_API_KEY` 直接注入模型 Key，或在「系统设置」页运行时配置
+- 生产环境建议：`docker run --restart=always`，或用 `docker compose up -d` 管理
+
+## 📦 生产部署建议
+
+| 场景 | 方案 |
+| ---- | ---- |
+| 单机常驻 | `npm start` + 系统服务/PM2（`pm2 start server/src/index.js --name des`） |
+| 容器化 | Dockerfile 多阶段构建（前端打包 + 运行时最小镜像） |
+| 数据备份 | 备份 `server/data/` 目录（数据库 + 成果文件即全部资产） |
+| 模型接入 | 环境变量 `LLM_API_KEY` / `LLM_BASE_URL` / `LLM_MODEL`，或设置页运行时配置 |
 
 ## 🧠 模型配置（国产模型）
 
