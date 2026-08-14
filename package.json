@@ -1,0 +1,17 @@
+{
+  "name": "digital-employees",
+  "version": "1.0.0",
+  "private": true,
+  "description": "数字员工系统 — AI Digital Employee Platform",
+  "workspaces": [
+    "server",
+    "web"
+  ],
+  "scripts": {
+    "dev:server": "npm run dev -w server",
+    "dev:web": "npm run dev -w web",
+    "build": "npm run build -w web",
+    "start": "npm run start -w server",
+    "seed": "npm run seed -w server"
+  }
+}
